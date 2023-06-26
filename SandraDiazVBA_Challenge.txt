@@ -6,6 +6,7 @@ Sub StocksRoutine()
    Dim GreatestIncrease As Double
    Dim GreatestDecrease As Double
    Dim GreatestVolume As Double
+   Dim PercentageChange As Double
    
    For Each ws In Sheets
        GreatestVolume = 0 'initializes for the next sheet
@@ -40,27 +41,30 @@ Sub StocksRoutine()
              
              'yearly change=closingPrice -openingPrice
              ws.Range("J" & 2 + j).Value = ws.Cells(i, 6).Value - openingPrice
+             
+             'Percent Change
+             PercentageChange = (ws.Cells(i, 6).Value - openingPrice) / openingPrice
+             ws.Range("K" & 2 + j).Value = Format((ws.Cells(i, 6).Value - openingPrice) / openingPrice, "###,###.##%")
+
              If (ws.Cells(i, 6).Value < openingPrice) Then
                 'decrease
                 ws.Cells(2 + j, 10).Interior.ColorIndex = 3
-                If ws.Cells(2 + j, 10).Value < GreatestDecrease Then
-                   GreatestDecrease = ws.Cells(2 + j, 10).Value
+                If PercentageChange < GreatestDecrease Then
+                   GreatestDecrease = PercentageChange
                    TickerDecrease = ws.Cells(i, 1).Value
                 End If
                 
              Else
                 'increase
                 ws.Cells(2 + j, 10).Interior.ColorIndex = 4
-                If ws.Cells(2 + j, 10).Value > GreatestIncrease Then
-                   GreatestIncrease = ws.Cells(2 + j, 10).Value
+                If PercentageChange > GreatestIncrease Then
+                   GreatestIncrease = PercentageChange
                    TickerIncrease = ws.Cells(i, 1).Value
                 End If
                 
              End If
              
-             'Percent Change
-             ws.Range("K" & 2 + j).Value = Str(Round(openingPrice / ws.Cells(i, 6).Value, 2)) & "%"
-             
+              
              'volume
              TotalVolume = TotalVolume + ws.Cells(i, 7).Value
              ws.Range("L" & 2 + j).Value = TotalVolume
@@ -92,27 +96,26 @@ Sub StocksRoutine()
        ws.Cells(3, 16).Value = TickerDecrease
        ws.Cells(4, 16).Value = TickerVolume
        
-       ws.Cells(2, 17).Value = GreatestIncrease
-       ws.Cells(3, 17).Value = GreatestDecrease
+       ws.Cells(2, 17).Value = Format(GreatestIncrease, "###,###.##%") 'GreatestIncrease
+       ws.Cells(3, 17).Value = Format(GreatestDecrease, "###,###.##%") 'GreatestDecrease
        ws.Cells(4, 17).Value = GreatestVolume
        
        
    Next ws
    
 End Sub
-
 Sub ClearColumns()
-      Dim ws As Worksheet, i As Long, j As Long
+      Dim ws As Worksheet
    For Each ws In Sheets
-       ws.Range("I1", "I2000000").ClearContents
-       ws.Range("J1", "J2000000").ClearContents
-       ws.Range("J1", "J2000000").Interior.ColorIndex = 0
-       ws.Range("K1", "K2000000").ClearContents
-       ws.Range("L1", "L2000000").ClearContents
-       ws.Range("M1", "M2000000").ClearContents
-       ws.Range("N1", "N2000000").ClearContents
-       ws.Range("O1", "O2000000").ClearContents
-       ws.Range("P1", "P2000000").ClearContents
-       ws.Range("Q1", "Q2000000").ClearContents
+       ws.Range("I1", "I200000").ClearContents
+       ws.Range("J1", "J200000").ClearContents
+       ws.Range("J1", "J200000").Interior.ColorIndex = 0
+       ws.Range("K1", "K200000").ClearContents
+       ws.Range("L1", "L200000").ClearContents
+       ws.Range("M1", "M200000").ClearContents
+       ws.Range("N1", "N200000").ClearContents
+       ws.Range("O1", "O200000").ClearContents
+       ws.Range("P1", "P200000").ClearContents
+       ws.Range("Q1", "Q200000").ClearContents
    Next ws
 End Sub
